@@ -13,22 +13,38 @@ const isLoggedIn = () => {
     return localStorage.getItem('loggedIn') === 'true';
 };
 
-const login = () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+const apiUrl = 'http://localhost:3000/api/';
 
-    // For the purpose of the task assuming only 2 users were created
-    if (username === 'admin' && password === 'password') {
+const login = async () => {
+    try {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch(apiUrl + 'user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
+        const data = await response.json();
+
         localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('userId', '1');
+        localStorage.setItem('userId', data.userId);
         showDashboard();
-    } else if (username === 'firstUser' && password === 'firstUser') {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('userId', '2');
-        showDashboard();
-    } else {
+
+        document.getElementById('usernameRegistration').value = '';
+        document.getElementById('passwordRegistration').value = '';
+    } catch (error) {
         alert('Incorrect username or password');
+        console.error('Error during user registration:', error);
     }
+
 };
 
 const logout = () => {
@@ -37,13 +53,49 @@ const logout = () => {
     showLoginPage();
 };
 
+const register = async () => {
+    try {
+        const username = document.getElementById('usernameRegistration').value;
+        const password = document.getElementById('passwordRegistration').value;
+
+        const response = await fetch(apiUrl + 'users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            alert(errorMessage);
+            throw new Error(errorMessage);
+        }
+
+        document.getElementById('usernameRegistration').value = '';
+        document.getElementById('passwordRegistration').value = '';
+        alert('Registration successful, please login');
+        showLoginPage()
+    } catch (error) {
+        console.error('Error during user registration:', error);
+    }
+};
+
 const showLoginPage = () => {
     document.getElementById('loginPage').style.display = 'block';
+    document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
+};
+
+const showRegisterPage = () => {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('registerPage').style.display = 'block';
     document.getElementById('dashboard').style.display = 'none';
 };
 
 const showDashboard = () => {
     document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('registerPage').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     renderNotes()
 };
@@ -62,6 +114,10 @@ function saveNotes(notes) {
 }
 
 function getNotes() {
+    return JSON.parse(localStorage.getItem('notes')) || [];
+}
+
+function getFilteredNotes() {
     let allNotes = JSON.parse(localStorage.getItem('notes')) || [];
     const currentUser = getCurrentUser();
     return allNotes.filter((note) => note.userId === currentUser)
@@ -69,14 +125,14 @@ function getNotes() {
 
 function renderNotes() {
     document.getElementById('notesContainer').innerHTML = '';
-    const notes = getNotes();
+    const notes = getFilteredNotes();
     notes.forEach((note, index) => {
         const noteDiv = document.createElement('div');
         noteDiv.className = 'note';
         noteDiv.innerHTML = `
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="mb-0">${note.title}</h5>
-            <small class="note-date">${note.date}</small>
+            <small class="note-date">${note.date} + ${note.noteId}</small>
             <button class="btn btn-sm btn-danger ms-2" onclick="deleteNote(${index})">X</button>
           </div>
           <div>${note.content}</div>
@@ -86,9 +142,10 @@ function renderNotes() {
 }
 
 function deleteNote(index) {
-    const notes = getNotes();
-    notes.splice(index, 1);
-    saveNotes(notes);
+    const filteredNotes = getFilteredNotes();
+    const noteId = filteredNotes.at(index).noteId
+    const notesToSave = getNotes().filter(note => note.noteId !== noteId)
+    saveNotes(notesToSave);
     renderNotes();
 }
 
@@ -109,6 +166,7 @@ function addNote() {
         title,
         content,
         userId: getCurrentUser(),
+        noteId: Math.random().toString(36).substring(2, 36),
         date: new Date().toLocaleString()
     });
     saveNotes(notes);

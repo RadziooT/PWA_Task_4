@@ -22,7 +22,22 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Password">
             </div>
-            <button type="submit" class="btn btn-primary py-2" onclick="login()">Login</button>
+            <button type="button" class="btn btn-primary py-2" onclick="login()">Login</button>
+            <button type="button" class="btn btn-primary py-2" onclick="showRegisterPage()">Register instead</button>
+        </div>
+
+        <div id="registerPage" style="display:none;">
+            <h1>Register page</h1>
+            <div class="form-group py-2">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="usernameRegistration" placeholder="Username">
+            </div>
+            <div class="form-group py-2">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="passwordRegistration" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary py-2" onclick="register()">Register</button>
+            <button type="button" class="btn btn-primary py-2" onclick="showLoginPage()">Login instead</button>
         </div>
 
         <div id="dashboard" style="display:none;">
