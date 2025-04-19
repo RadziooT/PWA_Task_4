@@ -6,7 +6,6 @@ self.addEventListener('install', function(event) {
                 '/', //root
                 '/index.html',
                 '/index.js',
-                '/note-logic.js',
                 '/style.css'
             ]);
         })

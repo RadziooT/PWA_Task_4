@@ -12,21 +12,40 @@
     <script src="index.js"></script>
     <script src="sw.js"></script>
     <div class="wrapper">
-        <h1>Note collector</h1>
-    </div>
-    <div class="container py-4">
-        <h2 class="mb-4">My Notes</h2>
-        <form id="noteForm" class="mb-4">
-            <div class="mb-3">
-                <input type="text" class="form-control" id="noteTitle" placeholder="Note Title" required>
+        <div id="loginPage">
+            <h1>Login page</h1>
+            <div class="form-group py-2">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username">
             </div>
-            <div class="mb-3">
-                <textarea class="form-control" id="noteContent" rows="3" placeholder="Write your note here..." required></textarea>
+            <div class="form-group py-2">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password">
             </div>
-            <button type="submit" class="btn btn-primary">Add Note</button>
-        </form>
-        <div id="notesContainer" class="d-flex flex-column"></div>
+            <button type="submit" class="btn btn-primary py-2" onclick="login()">Login</button>
+        </div>
+
+        <div id="dashboard" style="display:none;">
+            <header class="d-flex flex-row">
+                <h1>Dashboard</h1>
+                <button onclick="logout()" class="btn btn-primary my-2">Logout</button>
+            </header>
+            <main>
+                <div class="container py-4">
+                    <h2 class="mb-4">My Notes</h2>
+                    <form id="noteForm" class="mb-4">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="noteTitle" placeholder="Note Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="noteContent" rows="3" placeholder="Write your note here..." required></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addNote()">Add Note</button>
+                    </form>
+                    <div id="notesContainer" class="d-flex flex-column"></div>
+                </div>
+            </main>
+        </div>
     </div>
-    <script src="note-logic.js"></script>
 </body>
 </html>
