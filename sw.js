@@ -5,7 +5,11 @@ self.addEventListener('install', function(event) {
             return cache.addAll([
                 '/', //root
                 '/index.html',
+                '/notes.html',
+                '/analytics.html',
                 '/index.js',
+                '/notes.js',
+                '/chart.js',
                 '/style.css'
             ]);
         })

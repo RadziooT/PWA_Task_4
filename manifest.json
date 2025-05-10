@@ -1,10 +1,10 @@
 {
-    "name": "My first PWA application",
-    "short_name": "PWA App",
+    "name": "Bitcoin Buddy",
+    "short_name": "BtcBuddy",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#99e38d",
-    "theme_color": "#7fde41",
+    "background_color": "#F5F5F5",
+    "theme_color": "#FFB300",
     "icons": [
         {
             "src": "icons/manifest-icon-192.maskable.png",

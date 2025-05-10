@@ -9,7 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column">
-    <script src="sw.js"></script>
+<script src="index.js"></script>
+<script src="sw.js"></script>
     <header class="bg-dark text-white py-3 mb-3">
         <div class="container">
             <h1>Bitcoin Buddy</h1>
@@ -21,16 +22,31 @@
         </div>
     </header>
 
-    <main class="container">
+    <main>
         <h2 class="pb-2 text-center">
             Welcome to the Bitcoin Buddy
         </h2>
-        <p>This platform provides tools and insights to help you understand, track, and take notes on Bitcoin trends.</p>
-        <p>Stay updated using analytics page and track your insights with note-taking features.</p>
+
+        <div class="container py-5 my-5">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-6 text-center">
+                    <div class="py-3">
+                        <h5>
+                            Take notes and monitor bitcoin market value.
+                        </h5>
+                        <p>
+                            This platform provides tools and insights to help you understand, track, and take notes on Bitcoin trends.
+                            Stay updated using the analytics page and track your insights with note-taking features.
+                        </p>
+                    </div>
+                    <img src="/static/images/btc.svg" alt="Bitcoin Logo" class="img-fluid rounded shadow" style="max-height: 330px">
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="bg-light text-center p-3 mt-3">
-        <p class="mb-0">&copy; 2025 Bitcoin Portal</p>
+        <p class="mb-0">&copy; 2025 Mobile Systems Course</p>
     </footer>
 </body>
 </html>
