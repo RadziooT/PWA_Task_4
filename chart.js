@@ -7,7 +7,6 @@ async function fetchData() {
         document.getElementById('chartWrapper').style.display = 'block'
         const response = await fetch('https://api.sampleapis.com/bitcoin/historical_prices');
         const data = await response.json();
-        console.log(data)
         preparedData = data.map(entry => ({
             ...entry,
             Date: new Date(entry.Date)

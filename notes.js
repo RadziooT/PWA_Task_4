@@ -18,7 +18,7 @@ function setInsightType() {
     document.getElementById('noteAction').style.display = 'none';
 
     const title = document.getElementById('noteTitle');
-    title.value = `My insight about bitcoin - ${new Date().toLocaleString()}`;
+    title.value = 'My note';
 }
 
 function setTransactionType() {
@@ -26,12 +26,9 @@ function setTransactionType() {
     document.getElementById('noteAction').style.display = 'block';
 
     const title = document.getElementById('noteTitle');
-    title.value = `My bitcoin transaction - ${new Date().toLocaleString()}`;
+    title.value = 'Bitcoin transaction title';
 }
 
-document.addEventListener('DOMContentLoaded', onTypeChange);
-
-// Note logic
 function saveNotes(notes) {
     localStorage.setItem('notes', JSON.stringify(notes));
 }
@@ -106,5 +103,5 @@ function addNote() {
     renderNotes();
 }
 
-// Load notes on page load
+document.addEventListener('DOMContentLoaded', onTypeChange);
 document.addEventListener('DOMContentLoaded', renderNotes);
