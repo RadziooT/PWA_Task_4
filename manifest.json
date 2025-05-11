@@ -1,7 +1,7 @@
 {
     "name": "Bitcoin Buddy",
     "short_name": "BtcBuddy",
-    "start_url": "/",
+    "start_url": "/PWA_Task_4/",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#F5F5F5",
