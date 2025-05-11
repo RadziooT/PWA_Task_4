@@ -48,8 +48,9 @@ App uses [Sample APIs](https://sampleapis.com) to simulate real-time **Bitcoin v
 ---
 
 ## Live Page
-You can access the live version of Bitcoin Buddy here:  
-[**View Live App**](https://radzioot.github.io/PWA_Task_4/)
+
+You can access the live version of Bitcoin Buddy here: [**View Live App**](https://radzioot.github.io/PWA_Task_4/)
+
 ---
 
 ## Technologies Used
