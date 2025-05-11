@@ -1,3 +1,5 @@
+const CACHE_NAME = 'static'
+
 self.addEventListener('install', function(event) {
     //Fires only once per service worker installation
     event.waitUntil(
@@ -16,11 +18,27 @@ self.addEventListener('install', function(event) {
     );
 });
 
-self.addEventListener('fetch', function(event) {
+function isCacheable(request) {
+    const url = new URL(request.url);
+    return !url.pathname.endsWith(".json");
+}
+
+async function cacheFirstWithRefresh(request) {
+    const fetchResponsePromise = fetch(request).then(async (networkResponse) => {
+        if (networkResponse.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+    });
+
+    return (await caches.match(request)) || (await fetchResponsePromise);
+}
+
+self.addEventListener("fetch", (event) => {
     console.log(`Intercepted fetch request with url: ${event.request.url}`)
-    event.respondWith(
-        caches.match(event.request).then(function(response) {
-            return response || fetch(event.request);
-        })
-    );
+
+    if (isCacheable(event.request)) {
+        event.respondWith(cacheFirstWithRefresh(event.request));
+    }
 });
