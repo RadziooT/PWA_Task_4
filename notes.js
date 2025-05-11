@@ -1,3 +1,6 @@
+const notesObjectStoreKey = 'notes'
+let db;
+
 function onTypeChange() {
     const type = document.querySelector('input[name="noteType"]:checked').value;
 
@@ -29,54 +32,80 @@ function setTransactionType() {
     title.value = 'Bitcoin transaction title';
 }
 
-function saveNotes(notes) {
-    localStorage.setItem('notes', JSON.stringify(notes));
+const DBRequest = window.indexedDB.open('notes');
+
+DBRequest.onerror = (event) => {
+    console.log('Error loading database')
+};
+
+DBRequest.onsuccess = (event) => {
+    console.log('Database initialised')
+    db = DBRequest.result;
+    renderNotes();
+};
+
+DBRequest.onupgradeneeded = (event) => {
+    const db = event.target.result;
+    if (!db.objectStoreNames.contains(notesObjectStoreKey)) {
+        db.createObjectStore(notesObjectStoreKey, { keyPath: 'noteId', autoIncrement: true });
+    }
+};
+
+function saveNote(note) {
+    const transaction = db.transaction(notesObjectStoreKey, 'readwrite');
+    const objectStore = transaction.objectStore(notesObjectStoreKey);
+    objectStore.add(note)
 }
 
-function getNotes() {
-    return JSON.parse(localStorage.getItem('notes')) || [];
+function removeNote(noteId) {
+    const transaction = db.transaction(notesObjectStoreKey, 'readwrite');
+    const objectStore = transaction.objectStore(notesObjectStoreKey);
+    objectStore.delete(noteId);
+    transaction.oncomplete = () => {
+        renderNotes();
+    };
 }
 
 function renderNotes() {
     document.getElementById('notesContainer').innerHTML = '';
-    const notes = getNotes();
-    notes.forEach((note, index) => {
-        const noteDiv = document.createElement('div');
-        noteDiv.className = 'note';
 
-        if (note.type === 'insight') {
-            noteDiv.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="mb-0">${note.title}</h5>
-            <small class="note-date">${note.date}</small>
-            <button class="btn btn-sm btn-danger ms-2" onclick="deleteNote(${index})">X</button>
-          </div>
-          <div>${note.content}</div>
-        `;
-        } else {
-            noteDiv.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="mb-0">${note.title}</h5>
-            <small class="note-date">${note.date}</small>
-            <button class="btn btn-sm btn-danger ms-2" onclick="deleteNote(${index})">X</button>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="mb-2">${note.amount} BTC</h5>
-            <h5 class="mb-2">${note.action}</h5>
-          </div>
-          <div>${note.content}</div>
-        `;
-        }
+    const transaction = db.transaction(notesObjectStoreKey, 'readonly');
+    const objectStore = transaction.objectStore(notesObjectStoreKey);
+    const request = objectStore.getAll();
 
-        document.getElementById('notesContainer').appendChild(noteDiv);
-    });
-}
+    request.onsuccess = ()=> {
+        const notes = request.result;
 
-function deleteNote(index) {
-    const notes = getNotes()
-    notes.splice(index, 1)
-    saveNotes(notes);
-    renderNotes();
+        notes.forEach((note, index) => {
+            console.log(note)
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'note';
+
+            if (note.type === 'insight') {
+                noteDiv.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="mb-0">${note.title}</h5>
+                      <small class="note-date">${note.date}</small>
+                      <button class="btn btn-sm btn-danger ms-2" onclick="removeNote(${note.noteId})">X</button>
+                    </div>
+                    <div>${note.content}</div>`;
+            } else {
+                noteDiv.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="mb-0">${note.title}</h5>
+                      <small class="note-date">${note.date}</small>
+                      <button class="btn btn-sm btn-danger ms-2" onclick="removeNote(${note.noteId})">X</button>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="mb-2">${note.amount} BTC</h5>
+                      <h5 class="mb-2">${note.action}</h5>
+                    </div>
+                    <div>${note.content}</div>`;
+            }
+
+            document.getElementById('notesContainer').appendChild(noteDiv);
+        });
+    }
 }
 
 function addNote() {
@@ -88,20 +117,18 @@ function addNote() {
 
     if (!title || !content) return;
 
-    const notes = getNotes();
-    notes.push({
+    const note = {
         type,
         title,
         content,
         amount,
         action,
         date: new Date().toLocaleString()
-    });
+    };
 
     onTypeChange()
-    saveNotes(notes);
+    saveNote(note);
     renderNotes();
 }
 
 document.addEventListener('DOMContentLoaded', onTypeChange);
-document.addEventListener('DOMContentLoaded', renderNotes);
