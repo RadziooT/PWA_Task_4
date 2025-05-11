@@ -1,18 +1,19 @@
 const CACHE_NAME = 'static'
+const GITHUB_PAGES_PREFIX = '/PWA_Task_4'
 
 self.addEventListener('install', function(event) {
     //Fires only once per service worker installation
     event.waitUntil(
-        caches.open('static').then(function(cache) {
+        caches.open(CACHE_NAME).then(function(cache) {
             return cache.addAll([
-                '/', //root
-                '/index.html',
-                '/notes.html',
-                '/analytics.html',
-                '/index.js',
-                '/notes.js',
-                '/chart.js',
-                '/style.css'
+                GITHUB_PAGES_PREFIX + '/', //root
+                GITHUB_PAGES_PREFIX + '/index.html',
+                GITHUB_PAGES_PREFIX + '/notes.html',
+                GITHUB_PAGES_PREFIX + '/analytics.html',
+                GITHUB_PAGES_PREFIX + '/index.js',
+                GITHUB_PAGES_PREFIX + '/notes.js',
+                GITHUB_PAGES_PREFIX + '/chart.js',
+                GITHUB_PAGES_PREFIX + '/style.css'
             ]);
         })
     );
