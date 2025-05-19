@@ -72,7 +72,7 @@ If you'd like to run the app locally:
 
 #### Download repo:
 ```bash
-git clone https://github.com/your-github-username/bitcoin-buddy.git
+git clone https://github.com/RadziooT/PWA_Task_4.git
 cd bitcoin-buddy
 ```
 
